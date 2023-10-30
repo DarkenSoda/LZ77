@@ -71,7 +71,7 @@ public class LZ77 {
             tag.position = maxLength == 0 ? 0 : i - pos;
             tag.length = maxLength;
             if (i + maxLength >= data.length()) {
-                tag.nextChar = '0';
+                tag.nextChar = '\0';
             } else {
                 tag.nextChar = data.charAt(i + maxLength);
             }
@@ -122,6 +122,26 @@ public class LZ77 {
     }
 
     private String decompression(Vector<LZ77Tag> data) {
-        return null;
+        String string = "";
+        for (int i = 0; i < data.size(); i++) {
+
+            LZ77Tag tag = data.elementAt(i);
+
+            int key = string.length() - tag.position;
+
+            if (key >= 0) {
+                int len = tag.length;
+                
+                while (len > 0) {
+                    string += string.charAt(key);
+                    len--;
+                    key++;
+                }
+            }
+            if (tag.nextChar != '\0') {
+                string += tag.nextChar;
+            }
+        }
+        return string;
     }
 }
