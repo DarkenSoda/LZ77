@@ -32,12 +32,13 @@ public class LZ77 {
                 LZ77Tag tag = data.elementAt(i);
                 String nextSymbol = String.valueOf(tag.nextChar);
                 if (nextSymbol.equals("\n")) {
-                    writer.write("<" + tag.position + "," + tag.length + "," + "\\n" + ">  ");
+                    writer.write("<" + tag.position + "," + tag.length + "," + "\\n" + ">--");
                 } else {
-                    writer.write("<" + tag.position + "," + tag.length + "," + nextSymbol + ">  ");
+                    writer.write("<" + tag.position + "," + tag.length + "," + nextSymbol + ">--");
                 }
             }
             writer.close();
+            System.out.println("Compression Completed!");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,7 +86,42 @@ public class LZ77 {
         return tagList;
     }
 
-    public String decompress(String data) {
+    public void decompress(String inputFile, String outputFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+            String line;
+            StringBuilder result = new StringBuilder();
+
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            String[] tags = result.toString().split("--");
+            Vector<LZ77Tag> tagList = new Vector<LZ77Tag>();
+
+            for (String str : tags) {
+                String oneTag = str.substring(1, str.length() - 1);
+                String[] tagString = oneTag.split(",");
+
+                LZ77Tag tag = new LZ77Tag();
+                tag.position = Integer.parseInt(tagString[0]);
+                tag.length = Integer.parseInt(tagString[1]);
+                tag.nextChar = tagString[2].charAt(0);
+
+                tagList.add(tag);
+            }
+
+            String data = decompression(tagList);
+            FileWriter writer = new FileWriter(outputFile);
+            writer.write(data);
+            writer.close();
+
+            System.out.println("Decompression Completed!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String decompression(Vector<LZ77Tag> data) {
         return null;
     }
 }
