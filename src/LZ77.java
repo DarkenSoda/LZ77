@@ -38,6 +38,7 @@ public class LZ77 {
                 }
             }
             writer.close();
+
             System.out.println("Compression Completed!");
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,6 +68,7 @@ public class LZ77 {
                     }
                 }
             }
+
             LZ77Tag tag = new LZ77Tag();
             tag.position = maxLength == 0 ? 0 : i - pos;
             tag.length = maxLength;
@@ -79,10 +81,6 @@ public class LZ77 {
 
             i += maxLength + 1;
         }
-        // String result = "";
-        // for (LZ77Tag tag : tagList) {
-        // result += String.format("%d,%d,%c ", tag.position, tag.length, tag.nextChar);
-        // }
         return tagList;
     }
 
@@ -131,7 +129,7 @@ public class LZ77 {
 
             if (key >= 0) {
                 int len = tag.length;
-                
+
                 while (len > 0) {
                     string += string.charAt(key);
                     len--;
